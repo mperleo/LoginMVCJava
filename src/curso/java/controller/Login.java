@@ -1,18 +1,18 @@
 package curso.java.controller;
 
 import curso.java.model.Usuario;
+import curso.java.model.UsuarioDAO;
 import curso.java.view.VistaFormulario;
 import curso.java.view.VistaMenu;
 
-public class Login {
+import java.util.ArrayList;
 
-	public static final String USER = "admin";
-	public static final String PASS = "admin";
+public class Login {
 	
 	public static void main(String[] args) {
 		
 		int opcion = VistaMenu.mostrar();
-		int veces = 0; // variable para contar las veces que se hace el intento de login
+		int veces = 5; // variable para contar las veces que se hace el intento de login
 		
 		switch (opcion) {
 		//Loguin
@@ -25,7 +25,7 @@ public class Login {
 				//El usuario existe en el repositorio
 				if(existe) {
 					//TODO: comprobar contraseña:
-					if(comprobarContraseña(usuario)){
+					if(comprobarContras(usuario)){
 						//TODO: 1_ contraseña correcta -> vista OK
 						VistaMenu.mostrarLogin(usuario);
 					}
@@ -48,6 +48,8 @@ public class Login {
 		case 2:
 			//TODO: implementar el alta
 			Usuario nuevo = VistaFormulario.mostrarNuevoUsuario();
+			UsuarioDAO.escribirUsuarioEnFichero(nuevo);
+			VistaMenu.mostrarNuevoUsuario(nuevo);
 			// guardar nuevo en la BBDD despues de comprobar los datos
 
 			
@@ -59,23 +61,36 @@ public class Login {
 	
 	public static boolean existeUsuario(String user) {
 		boolean resultado = false;
-		//TODO: comprobar que el usuaro existe (se valida contra los valores de las constantes):
-		if(user.equals(USER)){
-			//TODO: 1_ el usuario existe -> resultado = true;
-			resultado= true;
+
+		ArrayList<Usuario> usuarios = UsuarioDAO.leerUsuariosDeFichero();
+
+		for(Usuario i: usuarios){
+			//comprobar que el usuaro existe (se valida contra los valores de las constantes):
+			if(user.equals(i.getUser())){
+				//el usuario existe -> resultado = true;
+				resultado= true;
+				return resultado;
+			}
 		}
-		//TODO: 2_ el usuario no existe -> resultado = false; (ya está con este valor por defecto)
+
+		//el usuario no existe -> resultado = false; (ya está con este valor por defecto)
 
 		return resultado;
 	}
 
-	public static boolean comprobarContraseña(Usuario userForm){
+	public static boolean comprobarContras(Usuario userForm){
 		boolean resultado = false;
-		if(userForm.equals(USER)){
-			//TODO: 1_ el usuario existe -> resultado = true;
-			resultado= true;
-			if(userForm.getPass().equals(PASS)){
-				resultado = true;
+
+		ArrayList<Usuario> usuarios = UsuarioDAO.leerUsuariosDeFichero();
+
+		for(Usuario i: usuarios){
+			//comprobar que el usuaro existe (se valida contra los valores de las constantes):
+			if(userForm.equals(i.getUser())){
+				//el usuario existe -> resultado = true;
+				if(userForm.getPass().equals(i.getPass())){
+					resultado= true;
+					return resultado;
+				}
 			}
 		}
 		return resultado;

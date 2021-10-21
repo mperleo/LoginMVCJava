@@ -31,6 +31,13 @@ public class VistaMenu {
 
 	}
 
+	public static void mostrarNuevoUsuario(Usuario usuario) {
+		System.out.println("La cuenta se ha creado correctamente");
+		System.out.println("Usuario: "+usuario.getUser());
+		System.out.println("Contraseña: "+ usuario.getPass());
+
+	}
+
 	public static void mostrarLoginError(int opcion) {
 		if(opcion == 1){
 			System.out.println("Usuario no encontrado");
