@@ -13,11 +13,12 @@ public class Login {
 		
 		int opcion = VistaMenu.mostrar();
 		int veces = 5; // variable para contar las veces que se hace el intento de login
+		boolean seguir = true;
 		
 		switch (opcion) {
 		//Loguin
 		case 1:
-			while(veces >0){
+			while(veces >0 && seguir == true){
 
 				Usuario usuario = VistaFormulario.mostrarLogin();
 				boolean existe = existeUsuario(usuario.getUser());
@@ -28,6 +29,7 @@ public class Login {
 					if(comprobarContras(usuario)){
 						//TODO: 1_ contraseña correcta -> vista OK
 						VistaMenu.mostrarLogin(usuario);
+						seguir = false;
 					}
 					else{
 						//TODO: 2_ contraseña incorrecta (número de intentos) -> volver al formulario y mensaje apropiado
@@ -41,6 +43,10 @@ public class Login {
 					//TODO: vista no OK -> volver al formulario y mensaje apropiado
 					VistaMenu.mostrarLoginError(1);
 					veces--;
+				}
+
+				if(veces == 0){
+					seguir = false;
 				}
 			}
 			break;
@@ -85,7 +91,7 @@ public class Login {
 
 		for(Usuario i: usuarios){
 			//comprobar que el usuaro existe (se valida contra los valores de las constantes):
-			if(userForm.equals(i.getUser())){
+			if(userForm.getUser().equals(i.getUser())){
 				//el usuario existe -> resultado = true;
 				if(userForm.getPass().equals(i.getPass())){
 					resultado= true;

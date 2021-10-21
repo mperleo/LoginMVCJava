@@ -39,8 +39,11 @@ public class VistaFormulario {
 
 			// se deberia hacer en el controlador y volver a esta vista si los datos no son correctos
 			if(pass.equals(pass2)){
-				System.out.println("Contraseñas distintas");
+
 				seguir = false;
+			}
+			else{
+				System.out.println("Contraseñas distintas");
 			}
 		}
 

@@ -14,9 +14,11 @@ public class UsuarioDAO {
             FileReader file = new FileReader("./usuarios/usuarios.txt");
             buffer = new BufferedReader(file);
             while ((linea=buffer.readLine()) != null) {
-                StringTokenizer strtokens = new StringTokenizer("linea",":");
+                StringTokenizer strtokens = new StringTokenizer(linea,":");
                 if(strtokens.hasMoreTokens()){
-                    Usuario usuario = new Usuario(strtokens.nextToken() ,strtokens.nextToken() );
+                    String nusuario = strtokens.nextToken();
+                    String contr = strtokens.nextToken();
+                    Usuario usuario = new Usuario(nusuario ,contr);
                     usuarios.add(usuario);    // Guardamos la linea en un String
                 }
             }
@@ -29,8 +31,7 @@ public class UsuarioDAO {
         return usuarios;
     }
 
-    public static ArrayList<Usuario> escribirUsuarioEnFichero(Usuario usuario){
-        ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+    public static void escribirUsuarioEnFichero(Usuario usuario){
         BufferedWriter buffer;
         String linea;
 
@@ -38,7 +39,9 @@ public class UsuarioDAO {
             FileWriter file = new FileWriter("./usuarios/usuarios.txt",true);
             buffer = new BufferedWriter(file);
             buffer.newLine();
-            buffer.write(usuario.getUser()+":"+usuario.getPass());
+            linea = usuario.getUser()+":"+usuario.getPass();
+            buffer.write(linea);
+            buffer.flush();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -46,6 +49,5 @@ public class UsuarioDAO {
             e.printStackTrace();
         }
 
-        return usuarios;
     }
 }
