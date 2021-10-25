@@ -19,6 +19,7 @@ public class VistaMenu {
 		System.out.println("Indica una opcion:");
 		System.out.println("1- Iniciar sesion");
 		System.out.println("2- Registrarme ");
+		System.out.println("3- Salir ");
 		opcion = sc.nextInt();
 		
 		return opcion;
@@ -26,6 +27,13 @@ public class VistaMenu {
 
 	public static void mostrarLogin(Usuario usuario) {
 		System.out.println("Login correcto");
+		System.out.println("Usuario: "+usuario.getUser());
+		System.out.println("Contraseña: "+ usuario.getPass());
+
+	}
+
+	public static void mostrarNuevoUsuario(Usuario usuario) {
+		System.out.println("La cuenta se ha creado correctamente");
 		System.out.println("Usuario: "+usuario.getUser());
 		System.out.println("Contraseña: "+ usuario.getPass());
 
