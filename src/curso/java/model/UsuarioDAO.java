@@ -1,51 +1,67 @@
 package curso.java.model;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import curso.Conexion;
+
 public class UsuarioDAO {
-    public static ArrayList<Usuario> leerUsuariosDeFichero(){
+    public static ArrayList<Usuario> seleccionarUsuarios(){
         ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-        BufferedReader buffer;
-        String linea;
+        
+        Connection con = Conexion.getConexion();
+    
 
         try {
-            FileReader file = new FileReader("./usuarios/usuarios.txt");
-            buffer = new BufferedReader(file);
-            while ((linea=buffer.readLine()) != null) {
-                StringTokenizer strtokens = new StringTokenizer("linea",":");
-                if(strtokens.hasMoreTokens()){
-                    Usuario usuario = new Usuario(strtokens.nextToken() ,strtokens.nextToken() );
-                    usuarios.add(usuario);    // Guardamos la linea en un String
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM usuarios");
+	        
+	        ResultSet resultado = ps.executeQuery();
+	        
+	        while(resultado.next()) {
+	        	Usuario usuario = new Usuario(resultado.getString("user"), resultado.getString("pass"));  
 
+	            usuarios.add(usuario);
+	        }
+	        ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        
+        Conexion.desconectar();
         return usuarios;
     }
 
-    public static ArrayList<Usuario> escribirUsuarioEnFichero(Usuario usuario){
-        ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-        BufferedWriter buffer;
-        String linea;
+    public static void insertarUsuario(Usuario usuario){
+    	Connection con = Conexion.getConexion();
+    	
+    	PreparedStatement ps;
+
 
         try {
-            FileWriter file = new FileWriter("./usuarios/usuarios.txt",true);
-            buffer = new BufferedWriter(file);
-            buffer.newLine();
-            buffer.write(usuario.getUser()+":"+usuario.getPass());
+    		ps = con.prepareStatement("INSERT INTO usuarios (user, pass) " + "VALUES (?, ?)");
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            ps.setString(1, usuario.getUser());
+            ps.setString(2, usuario.getPass());
+
+        	int resultado = ps.executeUpdate();
+
+            if (resultado == 0) {
+                System.out.println("NO se ha podido insertar");
+            }
+
+            ps.close();
+        	
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        Conexion.desconectar();
 
-        return usuarios;
+
     }
 }
